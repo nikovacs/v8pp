@@ -2,14 +2,13 @@
 
 include(GNUInstallDirs)
 
-if(DEFINED VCPKG_TARGET_TRIPLET)
-	find_package(V8 CONFIG REQUIRED)
-else()
-	list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-	find_package(V8 REQUIRED)
-endif()
-
-configure_file(config.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/config.hpp)
+# if(DEFINED VCPKG_TARGET_TRIPLET)
+# 	find_package(V8 CONFIG REQUIRED)
+# else()
+# 	list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+# 	find_package(V8 REQUIRED)
+# endif()
+# configure_file(config.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/config.hpp)
 
 if(V8_COMPRESS_POINTERS)
 	list(APPEND V8PP_DEFINES V8_COMPRESS_POINTERS V8_31BIT_SMIS_ON_64BIT_ARCH)
@@ -20,7 +19,7 @@ if (V8_ENABLE_SANDBOX)
 endif()
 
 set(V8PP_HEADERS
-	${CMAKE_CURRENT_BINARY_DIR}/config.hpp
+	config.hpp
 	call_from_v8.hpp
 	call_v8.hpp
 	class.hpp
@@ -75,7 +74,7 @@ if(V8PP_HEADER_ONLY)
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
 		$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-	target_link_libraries(v8pp INTERFACE V8::V8)
+	# target_link_libraries(v8pp INTERFACE V8::V8)
 else()
 	add_library(v8pp ${V8PP_HEADERS} ${V8PP_SOURCES})
 	target_compile_definitions(v8pp PUBLIC ${V8PP_DEFINES})
@@ -84,7 +83,16 @@ else()
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
 		$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-	target_link_libraries(v8pp PUBLIC V8::V8)
+	# target_link_libraries(v8pp PUBLIC V8::V8)
+	if(WIN32)
+		target_include_directories(v8pp PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../v8/include)
+		target_link_libraries(
+			v8pp PUBLIC
+			${CMAKE_CURRENT_SOURCE_DIR}/../../v8/lib/${CMAKE_BUILD_TYPE}/v8.dll.lib
+			${CMAKE_CURRENT_SOURCE_DIR}/../../v8/lib/${CMAKE_BUILD_TYPE}/v8_libbase.dll.lib
+			${CMAKE_CURRENT_SOURCE_DIR}/../../v8/lib/${CMAKE_BUILD_TYPE}/v8_libplatform.dll.lib
+		)
+	endif()
 	if(BUILD_SHARED_LIBS)
 		target_link_libraries(v8pp PUBLIC ${CMAKE_DL_LIBS})
 	endif()

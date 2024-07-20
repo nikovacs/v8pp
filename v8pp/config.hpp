@@ -9,12 +9,12 @@
 
 /// v8::Isolate data slot number, used in v8pp for shared data
 #if !defined(V8PP_ISOLATE_DATA_SLOT)
-#define V8PP_ISOLATE_DATA_SLOT @V8PP_ISOLATE_DATA_SLOT @
+#define V8PP_ISOLATE_DATA_SLOT 0
 #endif
 
 /// v8pp plugin initialization procedure name
 #if !defined(V8PP_PLUGIN_INIT_PROC_NAME)
-#define V8PP_PLUGIN_INIT_PROC_NAME @V8PP_PLUGIN_INIT_PROC_NAME @
+#define V8PP_PLUGIN_INIT_PROC_NAME 0
 #endif
 
 /// v8pp plugin filename suffix
