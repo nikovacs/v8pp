@@ -10,13 +10,13 @@ include(GNUInstallDirs)
 # endif()
 # configure_file(config.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/config.hpp)
 
-if(V8_COMPRESS_POINTERS)
-	list(APPEND V8PP_DEFINES V8_COMPRESS_POINTERS V8_31BIT_SMIS_ON_64BIT_ARCH)
-endif()
+# if(V8_COMPRESS_POINTERS)
+# 	list(APPEND V8PP_DEFINES V8_COMPRESS_POINTERS V8_31BIT_SMIS_ON_64BIT_ARCH)
+# endif()
 
-if (V8_ENABLE_SANDBOX)
-	list(APPEND V8PP_DEFINES V8_ENABLE_SANDBOX)
-endif()
+# if (V8_ENABLE_SANDBOX)
+# 	list(APPEND V8PP_DEFINES V8_ENABLE_SANDBOX)
+# endif()
 
 set(V8PP_HEADERS
 	config.hpp
@@ -66,18 +66,18 @@ else()
 	set(V8PP_COMPILE_OPTIONS -frtti -fexceptions -Wall -Wextra -Wpedantic)
 endif()
 
-if(V8PP_HEADER_ONLY)
-	add_library(v8pp INTERFACE)
-	target_compile_definitions(v8pp INTERFACE ${V8PP_DEFINES})
-	target_compile_options(v8pp INTERFACE ${V8PP_COMPILE_OPTIONS})
-	target_include_directories(v8pp INTERFACE
-		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-		$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+# if(V8PP_HEADER_ONLY)
+# 	add_library(v8pp INTERFACE)
+# 	target_compile_definitions(v8pp INTERFACE ${V8PP_DEFINES})
+# 	target_compile_options(v8pp INTERFACE ${V8PP_COMPILE_OPTIONS})
+# 	target_include_directories(v8pp INTERFACE
+# 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+# 		$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+# 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 	# target_link_libraries(v8pp INTERFACE V8::V8)
-else()
-	add_library(v8pp ${V8PP_HEADERS} ${V8PP_SOURCES})
-	target_compile_definitions(v8pp PUBLIC ${V8PP_DEFINES})
+# else()
+	add_library(v8pp STATIC ${V8PP_HEADERS} ${V8PP_SOURCES})
+	target_compile_definitions(v8pp PUBLIC V8_COMPRESS_POINTERS V8_ENABLE_SANDBOX _ITERATOR_DEBUG_LEVEL=2 V8_31BIT_SMIS_ON_64BIT_ARCH)
 	target_compile_options(v8pp PUBLIC ${V8PP_COMPILE_OPTIONS})
 	target_include_directories(v8pp PUBLIC
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
@@ -93,15 +93,15 @@ else()
 			${CMAKE_CURRENT_SOURCE_DIR}/../../v8/lib/${CMAKE_BUILD_TYPE}/v8_libplatform.dll.lib
 		)
 	endif()
-	if(BUILD_SHARED_LIBS)
-		target_link_libraries(v8pp PUBLIC ${CMAKE_DL_LIBS})
-	endif()
+	# if(BUILD_SHARED_LIBS)
+	# 	target_link_libraries(v8pp PUBLIC ${CMAKE_DL_LIBS})
+	# endif()
 	if(APPLE)
 		# turn off RTTI to avoid generating typeinfo for v8::ArrayBuffer::Allocator
 		# used in context.cpp
 		set_source_files_properties(context.cpp PROPERTIES COMPILE_FLAGS -fno-rtti)
 	endif()
-endif()
+# endif()
 
 #source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${V8PP_HEADERS} ${V8PP_SOURCES})
 
