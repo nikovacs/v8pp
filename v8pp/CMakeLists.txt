@@ -77,7 +77,7 @@ endif()
 	# target_link_libraries(v8pp INTERFACE V8::V8)
 # else()
 	add_library(v8pp STATIC ${V8PP_HEADERS} ${V8PP_SOURCES})
-	target_compile_definitions(v8pp PUBLIC V8_COMPRESS_POINTERS V8_ENABLE_SANDBOX _ITERATOR_DEBUG_LEVEL=2 V8_31BIT_SMIS_ON_64BIT_ARCH)
+	target_compile_definitions(v8pp PUBLIC V8_COMPRESS_POINTERS V8_ENABLE_SANDBOX V8_31BIT_SMIS_ON_64BIT_ARCH)
 	target_compile_options(v8pp PUBLIC ${V8PP_COMPILE_OPTIONS})
 	target_include_directories(v8pp PUBLIC
 		$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
