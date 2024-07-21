@@ -24,18 +24,18 @@ public:
 	template<typename T>
 	static v8::Local<v8::Value> set(v8::Isolate* isolate, T&& value)
 	{
-		if constexpr (is_bitcast_allowed<T>)
+		/*if constexpr (is_bitcast_allowed<T>)
 		{
 			void* ptr;
 			memcpy(&ptr, &value, sizeof value);
 			return v8::External::New(isolate, ptr);
 		}
-		else
-		{
+		else*/
+		// {
 			using ExtValue = value_holder<T>;
 			ExtValue* ext_value = new ExtValue(isolate, std::forward<T>(value));
 			return v8::Local<v8::External>::New(isolate, ext_value->pext);
-		}
+		// }
 	}
 
 	template<typename T>
