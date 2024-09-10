@@ -15,7 +15,14 @@ namespace v8pp { namespace detail {
 class external_data
 {
 public:
-	//TODO: allow non-capturing lambdas
+	template<typename T>
+	static constexpr bool is_non_capturing_lambda = 
+		std::is_empty_v<T> && 
+		std::is_class_v<T> &&
+		!std::is_function_v<T> &&
+		!std::is_pointer_v<T> &&
+		!std::is_member_pointer_v<T>;
+
 	template<typename T>
 	static constexpr bool is_bitcast_allowed = sizeof(T) <= sizeof(void*) &&
 		std::is_default_constructible_v<T> &&
@@ -24,7 +31,7 @@ public:
 	template<typename T>
 	static v8::Local<v8::Value> set(v8::Isolate* isolate, T&& value)
 	{
-		if constexpr (is_bitcast_allowed<T>)
+		if constexpr (is_bitcast_allowed<T> && !is_non_capturing_lambda<T>)
 		{
 			void* ptr;
 			memcpy(&ptr, &value, sizeof value);
