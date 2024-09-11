@@ -95,9 +95,9 @@ endif()
 	elseif(APPLE)
 		target_link_libraries(
 			v8pp PUBLIC
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../v8/lib/libv8.dylib>
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../v8/lib/libv8_libbase.dylib>
-			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../v8/lib/libv8_libplatform.dylib>
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/v8/lib/libv8.dylib>
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/v8/lib/libv8_libbase.dylib>
+			$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/v8/lib/libv8_libplatform.dylib>
 		)
 	endif()
 	# if(BUILD_SHARED_LIBS)
