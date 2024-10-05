@@ -243,7 +243,7 @@ void context::destroy()
 	}
 
 	// remove all class singletons and external data before modules unload
-	cleanup(isolate_);
+	cleanup(isolate_); // In ViciOnline, this should not be the responsibility of a context
 
 	for (auto& kv : modules_)
 	{

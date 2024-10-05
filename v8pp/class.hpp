@@ -61,6 +61,8 @@ public:
 	{
 		return to_local(isolate_, js_func_);
 	}
+	void set_js_name(std::string_view name) { js_name_ = name; }
+	std::string_view js_name() const { return js_name_; }
 
 	void set_auto_wrap_objects(bool auto_wrap) { auto_wrap_objects_ = auto_wrap; }
 	bool auto_wrap_objects() const { return auto_wrap_objects_; }
@@ -112,6 +114,7 @@ private:
 	ctor_function ctor_;
 	dtor_function dtor_;
 	bool auto_wrap_objects_;
+	std::string js_name_;
 };
 
 class classes
@@ -203,8 +206,7 @@ public:
 			{
 				destroy(isolate, Traits::template static_pointer_cast<T>(obj));
 			}))
-	{
-	}
+	{}
 
 	class_(class_ const&) = delete;
 	class_& operator=(class_ const&) = delete;
@@ -246,6 +248,15 @@ public:
 		class_info_.js_function_template()->Inherit(base.class_function_template());
 		return *this;
 	}
+
+	/// Set the Class Name
+	class_& js_name(std::string_view name)
+	{
+		class_info_.set_js_name(name);
+		class_info_.class_function_template()->SetClassName(to_v8(isolate(), name));
+		return *this;
+	}
+	std::string_view js_name() const { return class_info_.js_name(); }
 
 	/// Enable new C++ objects auto-wrapping
 	class_& auto_wrap_objects(bool auto_wrap = true)
