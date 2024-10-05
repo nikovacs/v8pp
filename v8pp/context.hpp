@@ -94,11 +94,11 @@ public:
 
 	/// Set class to the context global object
 	template<typename T, typename Traits>
-	context& class_(std::string_view name, v8pp::class_<T, Traits>& cl)
+	context& class_(v8pp::class_<T, Traits>& cl)
 	{
 		v8::HandleScope scope(isolate_);
-		cl.class_function_template()->SetClassName(v8pp::to_v8(isolate_, name));
-		return value(name, cl.js_function_template()->GetFunction(isolate_->GetCurrentContext()).ToLocalChecked());
+		// cl.class_function_template()->SetClassName(v8pp::to_v8(isolate_, name));
+		return value(cl.js_name(), cl.js_function_template()->GetFunction(isolate_->GetCurrentContext()).ToLocalChecked());
 	}
 
 private:
